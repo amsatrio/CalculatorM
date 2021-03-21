@@ -25,33 +25,66 @@
 
 package com.ams64.calculatorm
 
-class ScanActivity(private var inputStr: String){
-    private var tempOp = mutableListOf<String>()
-    private var tempNum = mutableListOf<String>()
-    private var tempAll = mutableListOf<String>()
+open class ScanActivity(private var inputString: String ) {
+
+    private var isDecimal: Boolean = false
+    var isFirstMove: Boolean = false
+    var isPow: Boolean = false
+    var isE: Boolean = false
+    var tempIndex1 = mutableListOf<Int>()
+    var tempIndex2 = mutableListOf<Int>()
     private var inputList = mutableListOf<String>()
 
-    fun scanStrList(): MutableList<String> {
-        val inputNum = inputStr.split("+","-","/","x","(",")","sin","cos","%","^")
-        tempOp = mutableListOf()
-        tempNum = mutableListOf()
+    private var tempOne = mutableListOf<String>()
+    private var tempTwo = mutableListOf<String>()
+    private var tempAll = mutableListOf<String>()
+
+    fun scanString(inputString: String): String {
+        var inputNum = listOf<String>()
+        var delimiterOperation = listOf("+","-","/","x","(",")","sin","cos","%","^")
+        tempOne = mutableListOf()
+        tempTwo = mutableListOf()
         tempAll = mutableListOf()
         inputList = mutableListOf()
-
-        for ((i,j) in inputStr.withIndex()){
-            if(j.toString() in listOf("+","-","/","x","(",")","sin","cos","%","^")){ //if value in list then
-                tempOp.add(j.toString())
-            }
-            else{
-                tempNum.add(i.toString())
+        for(i in inputString){
+            if(i.toString() == "^"){
+                isPow = true
+                break
+            }else{
+                isPow = false
             }
         }
+        for((i,j) in inputString.withIndex()){
+            if(i-1 >= 0 && j.toString() == "-"){
+                if(inputString[i-1].toString() == "E"){
+                    isE = true
+                    inputNum = inputString.split("+","/","x","(",")","sin","cos","%","^")
+                    delimiterOperation = listOf("+","/","x","(",")","sin","cos","%","^")
+                    break
+                }
+            }else{
+                isE = false
+                inputNum = inputString.split("+","-","/","x","(",")","sin","cos","%","^")
+                delimiterOperation = listOf("+","-","/","x","(",")","sin","cos","%","^")
+            }
+        }
+
+        for ((i,j) in inputString.withIndex()){
+            if(j.toString() in delimiterOperation){ //if value in list then
+                tempOne.add(j.toString())
+            }
+            else{
+                tempTwo.add(i.toString())
+            }
+        }
+
+
         for (i in inputNum.indices){
             if(i <= inputNum.size){
                 tempAll.add(inputNum[i])
             }
-            if(i < tempOp.size){
-                tempAll.add(tempOp[i])
+            if(i < tempOne.size){
+                tempAll.add(tempOne[i])
             }
         }
         for (i in tempAll){
@@ -60,29 +93,29 @@ class ScanActivity(private var inputStr: String){
             }
         }
 
-        inputStr = ""
+        this.inputString = ""
         tempAll = mutableListOf()
         for (i in inputList){
             if(i != ""){
                 tempAll.add(i)
-                inputStr += i
+                this.inputString += i
             }
         }
 
         //susun kalimat agar lebih mudah dibaca
-        var indexMin = mutableListOf<Int>()
+        var index = mutableListOf<Int>()
         var numMinus = false
         for ((i,j) in tempAll.withIndex()){
             if (j == "-"){
-                indexMin.add(i)
+                index.add(i)
             }
         }
-        if(indexMin.isNotEmpty()){
+        if(index.isNotEmpty()){
             numMinus = true
         }
 
         toHere@while(numMinus){
-            for(j in indexMin){
+            for(j in index){
                 if(tempAll[j] == "-"){
                     if(j-3 >= 0){
                         if(tempAll[j-1] in listOf("x","/")){
@@ -96,11 +129,11 @@ class ScanActivity(private var inputStr: String){
                                 tempAll.removeAt(j)
                                 tempAll.add(j-2,"-")
 
-                                indexMin = mutableListOf()
+                                index = mutableListOf()
                                 for ((m,n) in tempAll.withIndex()){
                                     if(n in listOf("+","-","/","x","(",")","sin","cos","%","^")){ //if value in list then
-                                        tempOp.add(j.toString())
-                                        indexMin.add(m)
+                                        tempOne.add(j.toString())
+                                        index.add(m)
                                     }
                                 }
                                 continue@toHere
@@ -121,16 +154,94 @@ class ScanActivity(private var inputStr: String){
                     }
                 }
             }
-            indexMin = mutableListOf()
+            index = mutableListOf()
             numMinus = false
         }
 
+        tempTwo = mutableListOf()
+        for(i in tempAll){
+            tempTwo.add(i)
+        }
+        for((i,j) in tempAll.withIndex()){
+            if(j == "(" && i-1 >= 0){
+                if(tempAll[i-1] in listOf("1","2","3","4","5","6","7","8","9","0")){
+                    tempTwo.add(i,"x")
+                }
+            }
+            if(j == ")" && i+1 < tempAll.size){
+                if(tempAll[i+1] in listOf("1","2","3","4","5","6","7","8","9","0")){
+                    tempTwo.add(i,"x")
+                }
+            }
+        }
+
+        tempAll = mutableListOf()
+        for(i in tempTwo){
+            tempAll.add(i)
+        }
+
+        this.inputString = ""
         inputList = mutableListOf()
         for (i in tempAll){
             if(i != ""){
                 inputList.add(i)
+                this.inputString += i
             }
         }
+        //var ==>> inputString, inputList
+        //Scan is E visible
+
+        //Scan First Move
+        tempIndex1 = mutableListOf()
+        tempIndex2 = mutableListOf()
+        for((i,j) in inputList.withIndex()){
+            if(j == "("){
+                tempIndex1.add(i)
+            }else if(j == ")"){
+                tempIndex2.add(i)
+            }
+        }
+        isFirstMove = tempIndex1.isNotEmpty()
+
+        println(inputString)
+
+        return inputString
+    }
+
+    fun getIsDecimal(inputString: String): Boolean {
+        val x = scanString(inputString)
+        for(i in x){
+            if(i.toString() == "."){
+                isDecimal = true
+                break
+            }
+            else{
+                isDecimal = false
+            }
+        }
+        return isDecimal
+    }
+
+    fun getInputList(inputString: String): MutableList<String>{
+        scanString(inputString)
+        println("inputList$inputList")
         return inputList
     }
+
+    fun getIsInteger(inputString: String): Boolean {
+        for((i,j) in inputString.withIndex()){
+            if(j.toString() == "." && i+1 == inputString.length-1){
+                if(inputString[i+1].toString() == "0"){
+                    isDecimal = true
+                    break
+                }
+            }
+            else{
+                isDecimal = false
+            }
+        }
+        return isDecimal
+    }
+
+
 }

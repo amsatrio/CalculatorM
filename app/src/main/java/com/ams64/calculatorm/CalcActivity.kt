@@ -25,155 +25,268 @@
 
 package com.ams64.calculatorm
 
-class CalcActivity (private var inputList: String){
+import java.lang.Math.pow
 
-    fun mainCalc(): String {
-        var numResult = funcKurung()
-        numResult = funcRound(7, numResult)
 
-        //remove .0
-        val strResult = numResult
-        var intResult = ""
-        var isInteger = false
-        for((i,j) in strResult.withIndex()){
-            if(i-1 >=0){
-                if(strResult[i-1].toString() == "."){
-                    if(j.toString() == "0" && i+1 == strResult.length){
-                        intResult = numResult.removeRange(i-1,i+1)
-                        isInteger = true
-                    }
+class CalcActivity(private var inputString: String) {
+
+
+    private var scanActivity = ScanActivity(inputString)
+
+    fun mainCalcActivity(): String {
+        scanActivity.scanString(inputString)
+
+        while(scanActivity.isPow || scanActivity.isFirstMove){
+            inputString = if(scanActivity.isFirstMove){firstMove()
+            }else{inputString}
+            println("inputString1 $inputString")
+            inputString = if(scanActivity.isPow){toPow(inputString)}else{inputString}
+            println("inputString2 $inputString")
+        }
+
+        inputString = if(inputString.isEmpty()){
+            "0"
+        } else{
+            basicOperation(inputString).toString()
+        }
+        inputString = if(scanActivity.getIsInteger(inputString)){toInteger(inputString)} else{inputString}
+        inputString = if(scanActivity.getIsDecimal(inputString)){funcRound(inputString)} else{inputString}
+
+        return inputString
+    }
+
+    private fun toPow(inputString: String): String {
+        var temp = scanActivity.getInputList(inputString)
+        val temp2 = mutableListOf<String>()
+        for(i in temp){
+            temp2.add(i)
+        }
+
+        for((i,j) in temp.withIndex()){
+            if(i-1>=0 && i+1<=temp.size-1 && j == "^"){
+                if(temp[i+1] == "+"){
+                    temp2.removeAt(i+1)
+                }
+                if(temp[i+1] == "-"){
+                    temp2.removeAt(i+1)
+                    temp2[i-1] = (1.0/temp2[i-1].toDouble()).toString()
                 }
             }
         }
 
-        //Final Result
-        return if(isInteger){
-            intResult
+        temp = mutableListOf()
+        for(i in temp2){
+            temp.add(i)
+        }
+
+
+        var tempResult: String
+        for((i,j) in temp.withIndex()){
+            if(i-1>=0 && i+1<=temp.size-1 && j == "^"){
+                if(temp[i+1] in listOf("1","2","3","4","5","6","7","8","9","0")){
+
+
+                    tempResult = pow(temp[i - 1].toDouble(),temp[i + 1].toDouble()).toString()
+
+                    temp2.removeAt(i+1)
+                    temp2.removeAt(i)
+                    temp2[i-1] = tempResult
+                    break
+                }
+            }
+        }
+
+        tempResult = ""
+        for (i in temp2){
+            tempResult += i
+        }
+        tempResult = scanActivity.scanString(tempResult)
+        return tempResult
+    }
+/*
+    private fun mathPow(double1: String, double2: String): String {
+        val doubleResult = mutableListOf<Double>()
+        doubleResult.add(double1.toDouble())
+        Log.d("Teeee","$double1, $double2" +
+                "")
+        return if(double2 == "0"){
+            "1"
         }else{
-            numResult
+            for(i in 0 until double2.toInt()){
+                doubleResult[i] = doubleResult[i]*double1.toDouble()
+            }
+            println("doubleResult[0].toString() ${doubleResult[0]}")
+            doubleResult[0].toString()
         }
     }
+*/
+    private fun toInteger(inputString: String): String {
+        //remove .0
+        return inputString.removeRange(inputString.length-2,inputString.length)
+    }
 
-    private fun funcKurung(): String {
-        val tempScan = ScanActivity(inputList)
-        var tempIndex1 = mutableListOf<Int>()
-        var tempIndex2 = mutableListOf<Int>()
-        var isKurung = false
-        var tempStr = ""
+    private fun funcRound(inputString: String): String {
+        val decDigit = 8
+        var tesDoubleResult = mutableListOf<String>()
+        var ruleRound = false
+        var isDecimal = false
 
 
-        for((i,j) in tempScan.scanStrList().withIndex()){
-            if(j == "("){
-                tempIndex1.add(i)
-                isKurung = true
-            }else if(j == ")"){
-                tempIndex2.add(i)
-                isKurung = true
+        for ((i,j) in inputString.withIndex()){
+
+            if (i-(decDigit+1) >= 0){
+                if(inputString[i-(decDigit+1)].toString() == "."){
+
+                    if(j.toString().toInt() > 5){
+                        ruleRound = true
+                        tesDoubleResult.add((inputString[i-1]).toString())
+
+                        var temp = tesDoubleResult.joinToString("")
+
+                        var x = "0."
+                        if(decDigit > 0){
+                            for(n in 0 until decDigit){
+                                x += if(n == decDigit-1){
+                                    1
+                                } else{
+                                    0
+                                }
+                            }
+                        }
+                        else{
+                            x=1.toString()
+                            for(n in 0 until decDigit){
+                                if(n != decDigit-1){
+                                    x += 0
+                                }
+                            }
+                        }
+
+                        temp = (temp.toDouble() + x.toDouble()).toString()
+                        tesDoubleResult = mutableListOf()
+
+                        for(n in temp){
+                            tesDoubleResult.add(n.toString())
+                        }
+                    }
+                    else if(j.toString().toInt() < 5){
+                        ruleRound = true
+                        tesDoubleResult.add(inputString[i-1].toString())
+                    }
+                    else if(j.toString().toInt() == 5){
+                        if(inputString[i-1].toString().toInt() in listOf(1, 3, 5, 7, 9)){
+                            ruleRound = true
+                            tesDoubleResult.add((inputString[i-1]+1).toString())
+                        }
+                        else {
+                            ruleRound = true
+                            tesDoubleResult.add(inputString[i-1].toString())
+                        }
+                    }
+                }
             }
-            if (tempIndex1.isEmpty() && tempIndex2.isEmpty()){
-                isKurung = false
+            if(!ruleRound && i-1 >= 0){
+                tesDoubleResult.add(inputString[i-1].toString())
+                if(i+1 == inputString.length){
+                    tesDoubleResult.add(j.toString())
+                }
+            }
+            if(j.toString() == "."){
+                isDecimal = true
             }
         }
+
+
+        return inputString
+    }
+
+    private fun firstMove(): String {
+        var tempStr: String
+        var tempLoopStr: String
+        val tempIndex1 = scanActivity.tempIndex1
+        val tempIndex2 = scanActivity.tempIndex2
+
+        scanActivity.scanString(inputString)
+        inputString = if(scanActivity.isPow){toPow(inputString)}else{inputString}
+        val inputList: MutableList<String> = scanActivity.getInputList(inputString)
+
+        inputString = ""
+        for(i in inputList){
+            inputString += i
+        }
+        scanActivity.scanString(inputString)
         tempIndex1.sortDescending()
 
-        toHere@while(isKurung){
-            tempIndex1 = mutableListOf()
-            tempIndex2 = mutableListOf()
-            for((i,j) in tempScan.scanStrList().withIndex()){
-                if(j == "("){
-                    tempIndex1.add(i)
-                    isKurung = true
-                }else if(j == ")"){
-                    tempIndex2.add(i)
-                    isKurung = true
-                }
-                if (tempIndex1.isEmpty() && tempIndex2.isEmpty()){
-                    isKurung = false
-                }
-            }
-            tempIndex1.sortDescending()
 
-
-            for((i,j) in tempIndex1.withIndex()){
-                var tempLoopStr: String
-                val tes1 = j+1
-                val tes2 = tempIndex2[i]-1
-
-                if(tes1 == tes2){
-                    for(m in j+1 until tempIndex2[i]){
-
-                        tempLoopStr = funcKalibataku(tempScan.scanStrList()[m]).toString()
-                        tempScan.scanStrList()[m] = tempLoopStr
-                        tempScan.scanStrList().removeAt(m+1)
-                        tempScan.scanStrList().removeAt(m-1)
-                    }
-                }
-            }
-
-            tempIndex1 = mutableListOf()
-            tempIndex2 = mutableListOf()
-            for((i,j) in tempScan.scanStrList().withIndex()){
-                if(j == "("){
-                    tempIndex1.add(i)
-                    isKurung = true
-                }else if(j == ")"){
-                    tempIndex2.add(i)
-                    isKurung = true
-                }
-                if (tempIndex1.isEmpty() && tempIndex2.isEmpty()){
-                    isKurung = false
-                }
-            }
-            tempIndex1.sortDescending()
-
-
-            for((i,j) in tempIndex1.withIndex()){
-                if(i > 0){
-                    continue@toHere
-                }
-                var tempLoopStr: String
-                val tes1 = tempIndex1[i]+1
-                val tes2 = tempIndex2[i]-1
-                if (tes1 <= tes2){
-                    var tempLoopStr2 = ""
-                    val tempIndexDelete = mutableListOf<Int>()
-
-                    for(m in tempIndex1[i]+1 until tempIndex2[i]){
-                        tempLoopStr2 += tempScan.scanStrList()[m]
-                    }
-
-                    tempLoopStr = funcKalibataku(tempLoopStr2).toString()
-                    tempScan.scanStrList()[j] = tempLoopStr
-
-                    for (m in tempIndex1[i]+1..tempIndex2[i]){
-                        tempIndexDelete.add(m)
-                    }
-                    tempIndexDelete.sortDescending()
-                    for(m in tempIndexDelete){
-                        tempScan.scanStrList().removeAt(m)
-                    }
+        //jika bentuknya (?)
+        for((i,j) in tempIndex1.withIndex()){
+            if(j+1 == tempIndex2[i]-1){
+                for(m in j+1 until tempIndex2[i]){
+                    tempLoopStr = basicOperation(inputList[m]).toString()
+                    inputList[m] = tempLoopStr
+                    inputList.removeAt(m+1)
+                    inputList.removeAt(m-1)
                 }
             }
         }
-        for(i in tempScan.scanStrList()){
+
+        inputString = ""
+        for(i in inputList){
+            inputString += i
+        }
+        scanActivity.scanString(inputString)
+        tempIndex1.sortDescending()
+
+        if(tempIndex1.isNotEmpty() && tempIndex2.isNotEmpty()){
+            if (tempIndex1[0]+1 < tempIndex2[0]-1){
+                tempStr = ""
+                val tempIndexDelete = mutableListOf<Int>()
+
+                for(m in tempIndex1[0]+1 until tempIndex2[0]){
+                    tempStr += inputList[m]
+                }
+
+                tempLoopStr = basicOperation(tempStr).toString()
+                println(tempLoopStr)
+                println(tempIndex1)
+                inputList[tempIndex1[0]] = tempLoopStr
+
+                for (m in tempIndex1[0]+1..tempIndex2[0]){
+                    tempIndexDelete.add(m)
+                }
+                tempIndexDelete.sortDescending()
+                for(m in tempIndexDelete){
+                    inputList.removeAt(m)
+                }
+
+
+            }
+        }
+
+        inputString = ""
+        for(i in inputList){
+            inputString += i
+        }
+        scanActivity.scanString(inputString)
+        tempIndex1.sortDescending()
+
+
+        tempStr = ""
+        for(i in inputList){
             tempStr += i
         }
-        //return tempStr
-        return funcKalibataku(tempStr).toString()
+        return tempStr
+
     }
 
-    private fun funcKalibataku(inputString: String): Double? {
+    private fun basicOperation(inputString: String): Double? {
         //finding -?x-? or ?x-?
-        val numStr = inputString
-
         //initialize
-        var tempScan = ScanActivity(numStr).scanStrList()
-        var tempTot = ScanActivity(numStr).scanStrList()
+        var tempScan = scanActivity.getInputList(inputString)
+        var tempTot = scanActivity.getInputList(inputString)
 
         for((i,j) in tempScan.withIndex()){
-
-            if(i-1 >= 0){
-                if(j == "-" ){
+            if(i-1 >= 0 && j == "-"){
                     if(tempScan[i-1] in listOf("+","-","/","x")){
                         //untuk minus ketemu kali dan bagi
                         if(tempScan[i-1] == "x" || tempScan[i-1] == "/"){
@@ -197,21 +310,18 @@ class CalcActivity (private var inputList: String){
                         }
                     }
                 }
-            }
-            if(i-1 < 0){
-                if(j in listOf<String>("+","-","/","x")){
-                    tempTot.add(0,"0")
-                }
+            if(i == 0 && j in listOf("+","-","/","x")){
+                tempTot.add(0,"0")
             }
         }
 
-        tempScan = mutableListOf<String>()
+        tempScan = mutableListOf()
         for(i in tempTot) {
             if (i != "") {
                 tempScan.add(i)
             }
         }
-        tempTot = mutableListOf<String>()
+        tempTot = mutableListOf()
         for(i in tempScan) {
             if (i != "") {
                 tempTot.add(i)
@@ -223,7 +333,6 @@ class CalcActivity (private var inputList: String){
         var remIndex = mutableListOf<Int>()
 
         for((i,v) in tempTot.withIndex()) {
-
             if(i-1 >= 0){
                 if (tempTot[i-1] == "x") {
                     finalResult = tempTot[i-2].toDouble() * v.toDouble()
@@ -304,117 +413,5 @@ class CalcActivity (private var inputList: String){
         return finalResult
     }
 
-    private fun funcRound(decDigit: Int, input1: Any): String {
-        var tesDoubleResult = mutableListOf<String>()
-        var tesDoubleStr = input1.toString()
-        var ruleRound = false
-        var isDecimal = false
-        var isIncludeE = false
-
-        val finalResult: String
-
-
-        for ((i,j) in tesDoubleStr.withIndex()){
-            if(j.toString() =="E"){
-                isIncludeE = true
-                break
-            }
-            if (i-(decDigit+1) >= 0){
-                if(tesDoubleStr[i-(decDigit+1)].toString() == "."){
-
-                    if(j.toString().toInt() > 5){
-                        ruleRound = true
-                        tesDoubleResult.add((tesDoubleStr[i-1]).toString())
-
-                        var temp = tesDoubleResult.joinToString("")
-
-                        var x = "0."
-                        if(decDigit > 0){
-                            for(n in 0 until decDigit){
-                                x += if(n == decDigit-1){
-                                    1
-                                } else{
-                                    0
-                                }
-                            }
-                        }
-                        else{
-                            x=1.toString()
-                            for(n in 0 until decDigit){
-                                if(n != decDigit-1){
-                                    x += 0
-                                }
-                            }
-                        }
-
-                        temp = (temp.toDouble() + x.toDouble()).toString()
-                        tesDoubleResult = mutableListOf<String>()
-
-                        for(n in temp){
-                            tesDoubleResult.add(n.toString())
-                        }
-                    }
-                    else if(j.toString().toInt() < 5){
-                        ruleRound = true
-                        tesDoubleResult.add(tesDoubleStr[i-1].toString())
-                    }
-                    else if(j.toString().toInt() == 5){
-                        if(tesDoubleStr[i-1].toString().toInt() in listOf<Int>(1, 3, 5, 7, 9)){
-                            ruleRound = true
-                            tesDoubleResult.add((tesDoubleStr[i-1]+1).toString())
-                        }
-                        else {
-                            ruleRound = true
-                            tesDoubleResult.add(tesDoubleStr[i-1].toString())
-                        }
-                    }
-                }
-            }
-            if(!ruleRound && i-1 >= 0){
-                tesDoubleResult.add(tesDoubleStr[i-1].toString())
-                if(i+1 == tesDoubleStr.length){
-                    tesDoubleResult.add(j.toString())
-                }
-            }
-            if(j.toString() == "."){
-                isDecimal = true
-            }
-        }
-
-        if(!isIncludeE){
-            if(!isDecimal){
-                tesDoubleStr += "."
-                for (i in 0 until decDigit){
-                    tesDoubleStr += "0"
-                }
-                finalResult = tesDoubleStr
-            }
-            else{
-                finalResult = tesDoubleResult.joinToString("")
-            }
-        }
-        else{
-            val elimE = tesDoubleStr.split("E")
-            var afterE = "E"
-            for ((i,j) in elimE.withIndex()){
-                if(i == 1){
-                    afterE += j
-                }
-            }
-
-            tesDoubleStr = ""
-            for (i in tesDoubleResult){
-                if(i != ""){
-                    tesDoubleStr += i
-                }
-            }
-            tesDoubleStr += afterE
-
-            finalResult = tesDoubleStr
-        }
-
-
-        return finalResult
-    }
 
 }

@@ -25,44 +25,25 @@
 
 package com.ams64.calculatorm
 
-import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-open class MainActivity : AppCompatActivity(), SendMessage {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
-
-        //Fragment Operation
-        val viewPagerOperation = findViewById<View>(R.id.viewPagerOperation) as ViewPager
-        val adapterOperation = FragmentAdapter(supportFragmentManager)
-        viewPagerOperation.adapter = adapterOperation
-
-        //Fragment View
-        val viewPagerView = findViewById<View>(R.id.viewPagerView) as ViewPager
-        val adapterView = FragmentAdapterView(supportFragmentManager)
-        viewPagerView.adapter = adapterView
-
-        var x = getString(R.string.del)
-
-    }
-
-    override fun sendData(message: String?) {
-        val tag = "android:switcher:" + R.id.viewPagerView.toString() + ":" + 0
-        val f = supportFragmentManager.findFragmentByTag(tag) as FragmentView?
-        if (f != null) {
-            if (message != null) {
-                f.displayReceivedData(message)
+class FragmentAdapter(fragmentManager: FragmentManager?) : FragmentPagerAdapter(fragmentManager!!) {
+    override fun getItem(position: Int): Fragment {
+        return when (position) {
+            0 -> {
+                FragmentOne()
+            }
+            else -> {
+                FragmentOne()
+                //FragmentTwo()
             }
         }
     }
 
-
-
-
+    override fun getCount(): Int {
+        return 1
+    }
 }
-
-

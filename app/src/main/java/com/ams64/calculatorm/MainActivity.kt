@@ -26,43 +26,36 @@
 package com.ams64.calculatorm
 
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
+import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentViewHolder
+import androidx.viewpager2.widget.ViewPager2
 
-open class MainActivity : AppCompatActivity(), SendMessage {
+open class MainActivity : FragmentActivity(), SendMessage {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        //Fragment Operation
-        val viewPagerOperation = findViewById<View>(R.id.viewPagerOperation) as ViewPager
-        val adapterOperation = FragmentAdapter(supportFragmentManager)
-        viewPagerOperation.adapter = adapterOperation
-
         //Fragment View
-        val viewPagerView = findViewById<View>(R.id.viewPagerView) as ViewPager
-        val adapterView = FragmentAdapterView(supportFragmentManager)
-        viewPagerView.adapter = adapterView
+        val viewPagerView = findViewById<ViewPager2>(R.id.viewPagerView)
+        viewPagerView.adapter = FragmentAdapterView(this)
 
-        var x = getString(R.string.del)
-
+        //Fragment Operation
+        val viewPagerOperation = findViewById<ViewPager2>(R.id.viewPagerOperation)
+        viewPagerOperation.adapter = FragmentAdapter(this)
     }
 
     override fun sendData(message: String?) {
-        val tag = "android:switcher:" + R.id.viewPagerView.toString() + ":" + 0
-        val f = supportFragmentManager.findFragmentByTag(tag) as FragmentView?
-        if (f != null) {
-            if (message != null) {
-                f.displayReceivedData(message)
-            }
+        val allFragments: List<Fragment> = supportFragmentManager.fragments
+        // 0 - FragmentView, 1 - FragmentOne
+
+        val fragmentView = allFragments[0] as FragmentView?
+        if (fragmentView != null && message != null) {
+            fragmentView.displayReceivedData(message)
         }
     }
-
-
-
-
 }
 
 

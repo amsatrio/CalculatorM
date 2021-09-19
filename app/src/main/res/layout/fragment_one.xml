@@ -63,7 +63,8 @@
                     android:gravity="center"
                     android:text="@string/n7"
                     android:textColor="@color/white"
-                    android:textSize="36sp" />
+                    android:textSize="36sp"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:id="@+id/textView8"
@@ -102,7 +103,8 @@
                     android:gravity="center"
                     android:text="@string/n4"
                     android:textColor="@color/white"
-                    android:textSize="36sp" />
+                    android:textSize="36sp"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:id="@+id/textView5"
@@ -141,7 +143,8 @@
                     android:gravity="center"
                     android:text="@string/n1"
                     android:textColor="@color/white"
-                    android:textSize="36sp" />
+                    android:textSize="36sp"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -180,7 +183,8 @@
                     android:gravity="center"
                     android:text="@string/dot"
                     android:textColor="@color/white"
-                    android:textSize="36sp" />
+                    android:textSize="36sp"
+                    tools:ignore="NestedWeights" />
 
                 <TextView
                     android:id="@+id/textView0"

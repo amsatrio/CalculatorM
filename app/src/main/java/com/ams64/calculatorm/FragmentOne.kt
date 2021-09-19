@@ -27,6 +27,7 @@ package com.ams64.calculatorm
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -103,7 +104,7 @@ class FragmentOne : Fragment() {
         sendMessage = try {
             activity as SendMessage?
         } catch (e: ClassCastException) {
-            throw ClassCastException("Error in retrieving data. Please try again")
+            throw ClassCastException("Error in retrieving data")
         }
     }
 }

@@ -28,6 +28,7 @@ package com.ams64.calculatorm
 import CalcView
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -40,40 +41,42 @@ class FragmentView : Fragment() {
     private var textViewTemp: TextView? = null
     private var textViewResult: TextView? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+        }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        println("FragV onCreateView")
         // Inflate the layout for this fragment
 
         return inflater.inflate(R.layout.fragment_view, container, false)
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        println("FragV onViewCreated")
-        textViewTemp = view.findViewById(R.id.textViewTemp)
-        textViewResult = view.findViewById(R.id.textViewResult)
-
+         textViewTemp = view.findViewById(R.id.textViewTemp)
+         textViewResult = view.findViewById(R.id.textViewResult)
     }
 
     fun displayReceivedData(message: String) {
-        println("FragV displayReceivedData" +
-                "\nmessage $message")
         val calcView = CalcView()
 
-        var dataOnTextViewTemp = textViewTemp?.text
+        val dataOnTextViewTemp = textViewTemp?.text
         val dataOnTextViewResult = textViewResult?.text
 
+        Log.d("displayReceivedData",message)
+        Log.d("textViewTemp",textViewTemp?.text.toString())
+        textViewTemp?.text = message
+
         textViewTemp!!.text = calcView.showTemp(message, dataOnTextViewTemp, dataOnTextViewResult)
-        textViewResult!!.text = calcView.showResult()
+        textViewResult?.text = calcView.showResult()
 
-        textViewTemp!!.movementMethod = ScrollingMovementMethod()
-        textViewResult!!.movementMethod = ScrollingMovementMethod()
+        textViewTemp?.movementMethod = ScrollingMovementMethod()
+        textViewResult?.movementMethod = ScrollingMovementMethod()
     }
-
-
 }

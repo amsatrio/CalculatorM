@@ -26,24 +26,25 @@
 package com.ams64.calculatorm
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
 
-class FragmentAdapter(fragmentManager: FragmentManager?) : FragmentPagerAdapter(fragmentManager!!) {
-    override fun getItem(position: Int): Fragment {
+class FragmentAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+    override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> {
                 FragmentOne()
             }
             else -> {
-                FragmentOne()
-                //FragmentTwo()
+//                FragmentOne()
+                FragmentTwo()
             }
         }
     }
 
-    override fun getCount(): Int {
-        return 1
+    override fun getItemCount(): Int {
+        return 2
     }
+
 }

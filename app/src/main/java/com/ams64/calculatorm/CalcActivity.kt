@@ -25,7 +25,8 @@
 
 package com.ams64.calculatorm
 
-import java.lang.Math.pow
+
+import kotlin.math.pow
 
 
 class CalcActivity(private var inputString: String) {
@@ -86,7 +87,7 @@ class CalcActivity(private var inputString: String) {
                 if(temp[i+1] in listOf("1","2","3","4","5","6","7","8","9","0")){
 
 
-                    tempResult = pow(temp[i - 1].toDouble(),temp[i + 1].toDouble()).toString()
+                    tempResult = temp[i - 1].toDouble().pow(temp[i + 1].toDouble()).toString()
 
                     temp2.removeAt(i+1)
                     temp2.removeAt(i)
@@ -129,7 +130,7 @@ class CalcActivity(private var inputString: String) {
         val decDigit = 8
         var tesDoubleResult = mutableListOf<String>()
         var ruleRound = false
-        var isDecimal = false
+//        var isDecimal = false
 
 
         for ((i,j) in inputString.withIndex()){
@@ -191,9 +192,9 @@ class CalcActivity(private var inputString: String) {
                     tesDoubleResult.add(j.toString())
                 }
             }
-            if(j.toString() == "."){
-                isDecimal = true
-            }
+//            if(j.toString() == "."){
+//                isDecimal = true
+//            }
         }
 
 

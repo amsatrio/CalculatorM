@@ -30,21 +30,21 @@ import com.ams64.calculatorm.MainActivity
 
 
 class CalcView: MainActivity() {
-    var tempString: String = ""
+    var tempStringOperation: String = ""
     var tempResult: String = ""
     fun showTemp(
         inputStr: String,
         dataOnTextViewTemp: CharSequence?,
         dataOnTextViewResult: CharSequence?
     ): String {
-        tempString = dataOnTextViewTemp.toString()
+        tempStringOperation = dataOnTextViewTemp.toString()
         tempResult = dataOnTextViewResult.toString()
 
         if(inputStr == "DEL"){    //Delete Button Action in textViewTemp and Result
-            val temp = tempString
+            val temp = tempStringOperation
             if(temp.isNotEmpty()){
-                tempString = temp.substring(0,temp.length-1)
-                val calcActivity = CalcActivity(tempString)
+                tempStringOperation = temp.substring(0,temp.length-1)
+                val calcActivity = CalcActivity(tempStringOperation)
                 tempResult = try {
                     calcActivity.mainCalcActivity()
                 }catch (e:Exception){
@@ -53,24 +53,35 @@ class CalcView: MainActivity() {
             }
         }
         else if(inputStr == "CLC"){
-            tempString = ""
+            tempStringOperation = ""
             tempResult = ""
         }
         else if(inputStr in listOf("(",")","^")){
-            tempString += inputStr
+            tempStringOperation += inputStr
         }
-        else if(inputStr in listOf("+","-","/","x")){ //Operator Button Action in textViewTemp and Result
+        else if(inputStr in listOf("+","-","÷","×")){ //Operator Button Action in textViewTemp and Result
 
-            tempString += inputStr
+            tempStringOperation += when (inputStr) {
+                "÷" -> {
+                    "/"
+                }
+                "×" -> {
+                    "x"
+                }
+                else -> {
+                    inputStr
+                }
+            }
+
         }
         else if(inputStr in listOf("1","2","3","4","5","6","7","8","9","0",")")){  //Number Button Action in textViewTemp and Result
             if(tempResult.isNotEmpty()){
                 tempResult = ""
             }
-            tempString += inputStr
+            tempStringOperation += inputStr
             println("tempResult $tempResult" +
                     "\ninputStr $inputStr")
-            val temp: String = tempString
+            val temp: String = tempStringOperation
             val calcActivity = CalcActivity(temp)
             tempResult = try {
                 calcActivity.mainCalcActivity()
@@ -79,16 +90,16 @@ class CalcView: MainActivity() {
             }
         }
         else if(inputStr == "."){
-            tempString += inputStr
+            tempStringOperation += inputStr
         }
         else if(inputStr == "="){  //Equal Button Action in textViewTemp
-            val calcActivity = CalcActivity(tempString)
+            val calcActivity = CalcActivity(tempStringOperation)
             tempResult = try {
                 calcActivity.mainCalcActivity()
             }catch (e:Exception){
                 "SyntaxError"
             }
-            tempString = if(tempResult.isNotEmpty() && tempResult.isNotEmpty()) {
+            tempStringOperation = if(tempResult.isNotEmpty() && tempResult.isNotEmpty()) {
                 tempResult
             } else{
                 "0"
@@ -96,9 +107,10 @@ class CalcView: MainActivity() {
             tempResult = ""
         }
 
-        println("tempStringFinal $tempString" +
-                "tempResultFinal $tempResult")
-        return tempString
+        println("tempStringOperationFinal $tempStringOperation" +
+                "\ntempStringViewFinal $tempStringOperation" +
+                "\ntempResultFinal $tempResult")
+        return tempStringOperation
     }
 
 
@@ -106,8 +118,4 @@ class CalcView: MainActivity() {
     fun showResult(): String {
         return tempResult
     }
-
-
-
-
 }

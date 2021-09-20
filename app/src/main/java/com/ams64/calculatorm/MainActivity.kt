@@ -26,13 +26,11 @@
 package com.ams64.calculatorm
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentViewHolder
 import androidx.viewpager2.widget.ViewPager2
 
-open class MainActivity : FragmentActivity(), SendMessage {
+open class MainActivity : FragmentActivity(), SendData {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +54,7 @@ open class MainActivity : FragmentActivity(), SendMessage {
             fragmentView.displayReceivedData(message)
         }
     }
+
 }
 
 

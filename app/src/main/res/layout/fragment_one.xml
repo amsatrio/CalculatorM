@@ -31,15 +31,18 @@
     android:layout_height="match_parent"
     tools:context=".FragmentOne">
 
-    <!-- TODO: Update blank fragment layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:id="@+id/linearLayout1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
@@ -52,7 +55,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/brown2"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
 
 
                 <TextView
@@ -63,8 +67,7 @@
                     android:gravity="center"
                     android:text="@string/n7"
                     android:textColor="@color/white"
-                    android:textSize="36sp"
-                    tools:ignore="NestedWeights" />
+                    android:textSize="36sp" />
 
                 <TextView
                     android:id="@+id/textView8"
@@ -211,8 +214,9 @@
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="80dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
             android:background="@color/brown1"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -228,7 +232,8 @@
                 android:gravity="center"
                 android:text="@string/del"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/textViewTimes"
@@ -272,6 +277,6 @@
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </FrameLayout>

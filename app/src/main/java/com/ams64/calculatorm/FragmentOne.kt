@@ -27,7 +27,6 @@ package com.ams64.calculatorm
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +34,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class FragmentOne : Fragment() {
-    private var sendMessage: SendMessage? = null
+    private var sendData: SendData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,16 +71,26 @@ class FragmentOne : Fragment() {
         val textViewEqual: TextView = view.findViewById(R.id.textViewEqual)
 
         //Input
-        textView1.setOnClickListener{onSendData(textView1.text.toString())}
-        textView2.setOnClickListener{onSendData(textView2.text.toString())}
-        textView3.setOnClickListener{onSendData(textView3.text.toString())}
-        textView4.setOnClickListener{onSendData(textView4.text.toString())}
-        textView5.setOnClickListener{onSendData(textView5.text.toString())}
-        textView6.setOnClickListener{onSendData(textView6.text.toString())}
-        textView7.setOnClickListener{onSendData(textView7.text.toString())}
-        textView8.setOnClickListener{onSendData(textView8.text.toString())}
-        textView9.setOnClickListener{onSendData(textView9.text.toString())}
-        textView0.setOnClickListener{onSendData(textView0.text.toString())}
+        textView1.setOnClickListener{onSendData(textView1.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView2.setOnClickListener{onSendData(textView2.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView3.setOnClickListener{onSendData(textView3.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView4.setOnClickListener{onSendData(textView4.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView5.setOnClickListener{onSendData(textView5.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView6.setOnClickListener{onSendData(textView6.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView7.setOnClickListener{onSendData(textView7.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView8.setOnClickListener{onSendData(textView8.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView9.setOnClickListener{onSendData(textView9.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
+        textView0.setOnClickListener{onSendData(textView0.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
         textViewDot.setOnClickListener{onSendData(textViewDot.text.toString())}
 
         //Action
@@ -89,20 +98,24 @@ class FragmentOne : Fragment() {
         textViewDivide.setOnClickListener{onSendData(textViewDivide.text.toString())}
         textViewPlus.setOnClickListener{onSendData(textViewPlus.text.toString())}
         textViewMin.setOnClickListener{onSendData(textViewMin.text.toString())}
-        textViewDel.setOnClickListener {onSendData(textViewDel.text.toString())}
+        textViewDel.setOnClickListener {
+            onSendData(textViewDel.text.toString())
+            textViewDel.text = resources.getString(R.string.del)}
 
         //Result
-        textViewEqual.setOnClickListener{onSendData(textViewEqual.text.toString())}
+        textViewEqual.setOnClickListener{
+            textViewDel.text = resources.getString(R.string.clc)
+            onSendData(textViewEqual.text.toString())}
     }
 
     private fun onSendData(inputString: String){
-        sendMessage?.sendData(inputString.trim { it <= ' ' })
+        sendData?.sendData(inputString.trim { it <= ' ' })
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        sendMessage = try {
-            activity as SendMessage?
+        sendData = try {
+            activity as SendData?
         } catch (e: ClassCastException) {
             throw ClassCastException("Error in retrieving data")
         }

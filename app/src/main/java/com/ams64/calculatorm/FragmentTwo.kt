@@ -34,7 +34,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class FragmentTwo : Fragment() {
-    private var sendMessage: SendMessage? = null
+    private var sendData: SendData? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_two, container, false)
@@ -54,7 +54,7 @@ class FragmentTwo : Fragment() {
     }
 
     private fun onSendData(inputString: String){
-        sendMessage?.sendData(inputString.trim { it <= ' ' })
+        sendData?.sendData(inputString.trim { it <= ' ' })
     }
 
 
@@ -63,7 +63,7 @@ class FragmentTwo : Fragment() {
          super.onAttach(context)
 
          try {
-              sendMessage = activity as SendMessage?
+              sendData = activity as SendData?
         } catch (e: ClassCastException) {
             throw ClassCastException("Error in retrieving data. Please try again")
         }

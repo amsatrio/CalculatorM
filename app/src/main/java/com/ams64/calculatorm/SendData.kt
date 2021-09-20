@@ -25,6 +25,6 @@
 
 package com.ams64.calculatorm
 
-interface SendMessage {
+interface SendData {
     fun sendData(message: String?)
 }

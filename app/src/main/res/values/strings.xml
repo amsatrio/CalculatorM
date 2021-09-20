@@ -36,20 +36,23 @@
     <string name="n7">7</string>
     <string name="n8">8</string>
     <string name="n9">9</string>
-
-
     <string name="dot">.</string>
+
+
+
     <string name="min">-</string>
     <string name="plus">+</string>
-    <string name="divide">/</string>
-    <string name="times">x</string>
+    <string name="divide">÷</string>
+    <string name="times">×</string>
     <string name="equal">=</string>
     <string name="del">DEL</string>
     <string name="bracket1">(</string>
     <string name="bracket2">)</string>
     <string name="clc">CLC</string>
     <string name="pow">^</string>
-    <string name="syntaxerror">SyntaxError</string>
+    <string name="syntaxError">SyntaxError</string>
+
+    <string name="errorData">Error in retrieving data</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

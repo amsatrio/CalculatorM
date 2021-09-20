@@ -71,7 +71,6 @@ class FragmentView : Fragment() {
 
         Log.d("displayReceivedData",message)
         Log.d("textViewTemp",textViewTemp?.text.toString())
-        textViewTemp?.text = message
 
         textViewTemp!!.text = calcView.showTemp(message, dataOnTextViewTemp, dataOnTextViewResult)
         textViewResult?.text = calcView.showResult()

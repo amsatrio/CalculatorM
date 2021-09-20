@@ -37,14 +37,14 @@ class FragmentAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
                 FragmentOne()
             }
             else -> {
-//                FragmentOne()
-                FragmentTwo()
+                FragmentOne()
+//                FragmentTwo()
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return 1
     }
 
 }
